@@ -1,5 +1,6 @@
 import pandas as pd
 import matplotlib.pyplot as plt
+import seaborn as sns
 
 # Load the cleaned dataset
 df = pd.read_excel("Dataset/Cleaned_Sales_Dataset.xlsx")
@@ -164,6 +165,76 @@ plt.xlabel("Total Sales")
 
 plt.tight_layout()
 plt.savefig("Output/Top10_Products.png")
+plt.show(block=False)
+plt.pause(2)
+plt.close()
+# ==========================
+# CORRELATION HEATMAP
+# ==========================
+
+
+
+# Select numerical columns
+numeric_data = df.select_dtypes(include=['int64', 'float64'])
+
+# Calculate correlation
+correlation = numeric_data.corr()
+
+print("\n" + "=" * 50)
+print("CORRELATION MATRIX")
+print("=" * 50)
+print(correlation)
+
+
+# Plot heatmap
+plt.figure(figsize=(8,6))
+
+sns.heatmap(
+    correlation,
+    annot=True,
+    cmap="coolwarm",
+    fmt=".2f"
+)
+
+plt.title("Correlation Heatmap")
+
+plt.tight_layout()
+
+plt.savefig("Output/Correlation_Heatmap.png")
+
+plt.show(block=False)
+plt.pause(2)
+plt.close()
+# ==========================
+# SALES BY CITY
+# ==========================
+
+city_sales = (
+    df.groupby("City")["Total_Sales"]
+      .sum()
+      .sort_values(ascending=False)
+)
+
+print("\n" + "=" * 50)
+print("SALES BY CITY")
+print("=" * 50)
+print(city_sales)
+
+
+plt.figure(figsize=(10,5))
+
+city_sales.plot(kind="bar")
+
+plt.title("Total Sales by City")
+plt.xlabel("City")
+plt.ylabel("Total Sales")
+
+plt.xticks(rotation=45)
+
+plt.tight_layout()
+
+plt.savefig("Output/Sales_by_City.png")
+
 plt.show(block=False)
 plt.pause(2)
 plt.close()
